@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+    Archivo de configuracion de Contexto de Spring
+    
+    Copyright 2013 Banco Azteca. Todos los derechos reservados.
+    @author Giovanni Farfán Briceño
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+                      
+    <context:component-scan base-package="com.baz.scc"/>
+    
+    <context:property-placeholder location="classpath:application.properties, classpath:service.properties" system-properties-mode="OVERRIDE"/>
+    
+    <bean id="serviceConfig" class="com.baz.scc.test.turnadorswarm.model.CjCRServiceConfig">
+        <property name="autentificaUrlBase" value="#{${turnador.production} ? '${service.url.production.autentifica}' : '${service.url.development.autentifica}'}"/>
+        <property name="cipherUrlBase" value="#{${turnador.production} ? '${service.url.production.cipher}' : '${service.url.development.cipher}'}"/>
+        <property name="credentialsUrlBase" value="#{${turnador.production} ? '${service.url.production.credentials}' : '${service.url.development.credentials}'}"/>
+        <property name="negocioUrlBase" value="#{${turnador.production} ? '${service.url.production.negocio}' : '${service.url.development.negocio}'}"/>
+        <property name="poolUrlBase" value="#{${turnador.production} ? '${service.url.production.pool}' : '${service.url.development.pool}'}"/>
+        <property name="turnosUrlBase" value="#{${turnador.production} ? '${service.url.production.turnos}' : '${service.url.development.turnos}'}"/>
+        <property name="turnadorUrlBase" value="#{${turnador.production} ? '${service.url.production.turnador}' : '${service.url.development.turnador}'}"/>
+    </bean>
+    
+    <bean id="turnadorConfig" class="com.baz.scc.test.turnadorswarm.model.CjCRTurnadorConfig">
+        <property name="negocioAtencionData" value="${turnador.config.negocio.antencion.data}"/>
+        <property name="credentialsFile" value="${turnador.config.credentials.file}"/>
+        <property name="defaultCredential" value="${turnador.config.default.credential}"/>
+        <property name="sucursal" value="${turnador.config.sucursal}"/>
+        <property name="noEmpleados" value="${turnador.config.noEmpleados}"/>
+        <property name="noTurnos" value="${turnador.config.noTurnos}"/>        
+        <property name="tiempoMinimo" value="${turnador.config.tiempo.minimo}"/>
+        <property name="factorEspera" value="${turnador.config.factor.espera}"/>
+        <property name="factorTurnoMin" value="${turnador.config.factor.turno.min}"/>
+        <property name="factorTurnoMax" value="${turnador.config.factor.turno.max}"/>
+        <property name="factorDisponibleMin" value="${turnador.config.factor.disponible.min}"/>
+        <property name="factorDisponibleMax" value="${turnador.config.factor.disponible.max}"/>
+        <property name="factorAsignacionMin" value="${turnador.config.factor.asignacion.min}"/>
+        <property name="factorAsignacionMax" value="${turnador.config.factor.asignacion.max}"/>
+        <property name="factorAtencionMin" value="${turnador.config.factor.atencion.min}"/>
+        <property name="factorAtencionMax" value="${turnador.config.factor.atencion.max}"/>
+        <property name="turnosConfig" ref="turnosConfig"/>
+    </bean>
+    
+    <util:map id="turnosConfig" map-class="java.util.HashMap">
+        <entry>
+            <key>
+                <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_BASICO"/>
+            </key>
+            <bean class="com.baz.scc.test.turnadorswarm.model.CjCRTurnoBehaviorConfig">
+                <property name="id">
+                    <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_BASICO"/>
+                </property>
+                <property name="percent" value="${turno.behavior.percent.basico}"/>
+            </bean>
+        </entry>
+        <entry>
+            <key>
+                <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_POSPUESTO"/>
+            </key>
+            <bean class="com.baz.scc.test.turnadorswarm.model.CjCRTurnoBehaviorConfig">
+                <property name="id">
+                    <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_POSPUESTO"/>
+                </property>
+                <property name="percent" value="${turno.behavior.percent.pospuesto}"/>
+            </bean>
+        </entry>
+        <entry>
+            <key>
+                <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_APROPIADO"/>
+            </key>
+            <bean class="com.baz.scc.test.turnadorswarm.model.CjCRTurnoBehaviorConfig">
+                <property name="id">
+                    <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_APROPIADO"/>
+                </property>
+                <property name="percent" value="${turno.behavior.percent.apropiado}"/>
+            </bean>
+        </entry>
+        <entry>
+            <key>
+                <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_CANCELADO"/>
+            </key>
+            <bean class="com.baz.scc.test.turnadorswarm.model.CjCRTurnoBehaviorConfig">
+                <property name="id">
+                    <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_CANCELADO"/>
+                </property>
+                <property name="percent" value="${turno.behavior.percent.cancelado}"/>
+            </bean>
+        </entry>
+        <entry>
+            <key>
+                <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_VIRTUAL"/>
+            </key>
+            <bean class="com.baz.scc.test.turnadorswarm.model.CjCRTurnoBehaviorConfig">
+                <property name="id">
+                    <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_VIRTUAL"/>
+                </property>
+                <property name="percent" value="${turno.behavior.percent.virtual}"/>
+            </bean>
+        </entry>
+        <entry>
+            <key>
+                <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_CADUCADO"/>
+            </key>
+            <bean class="com.baz.scc.test.turnadorswarm.model.CjCRTurnoBehaviorConfig">
+                <property name="id">
+                    <util:constant static-field="com.baz.scc.test.turnadorswarm.support.CjCRSwarmStatus.TURNO_BEHAVIOR_CADUCADO"/>
+                </property>
+                <property name="percent" value="${turno.behavior.percent.caducado}"/>
+            </bean>
+        </entry>
+    </util:map>
+</beans>
